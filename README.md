@@ -4,7 +4,7 @@
 - 💞️ I’m looking to collaborate on gaming projects.
 - 📫 How to reach me: X @DaCartHobo / Discord Seti9926
 - 😄 Pronouns: Don't know yet.
-- ⚡ Fun fact: I wank off a lot.
+- ⚡ Fun fact: I play sports.
 
 <!---
 ElShamy-cmd/ElShamy-cmd is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.

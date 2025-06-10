@@ -1,0 +1,11 @@
+flask==2.3.3
+gradio==4.0.0
+diffusers==0.26.3
+transformers==4.37.2
+accelerate==0.27.2
+safetensors==0.5.3
+--only-binary :all:
+pillow==11.2.1
+numpy==2.3.0
+python-dotenv==1.0.1
+markupsafe==3.0.2 

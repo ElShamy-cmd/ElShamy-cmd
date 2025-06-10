@@ -1,0 +1,31 @@
+{
+  "name": "spline-style-webapp",
+  "version": "1.0.0",
+  "description": "A web application featuring 3D elements and designs inspired by Spline.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "keywords": [
+    "3D",
+    "React",
+    "web",
+    "spline"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "three": "^0.132.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-plugin-react": "^7.27.1"
+  },
+  "homepage": "http://yourdomain.com/spline-style-webapp"
+}

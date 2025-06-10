@@ -1,0 +1,12 @@
+{
+    "model_id": "runwayml/stable-diffusion-v1-5",
+    "device": "cpu",
+    "num_inference_steps": 50,
+    "guidance_scale": 7.5,
+    "width": 512,
+    "height": 512,
+    "seed": null,
+    "scheduler": "default",
+    "negative_prompt": "",
+    "num_images": 1
+}

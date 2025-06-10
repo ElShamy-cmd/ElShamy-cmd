@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milk - AI Image Generation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <nav class="glass-effect p-4 mb-8">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-white">Milk</h1>
+            <div class="space-x-4">
+                <button onclick="showTab('text2img')" class="text-white hover:text-blue-200">Text to Image</button>
+                <button onclick="showTab('img2img')" class="text-white hover:text-blue-200">Image to Image</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4">
+        <!-- Text to Image Tab -->
+        <div id="text2img" class="tab-content">
+            <div class="glass-effect rounded-lg p-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-4">Generate Images</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-white mb-2">Prompt</label>
+                                <textarea id="prompt" class="w-full p-2 rounded" rows="3" placeholder="Enter your prompt..."></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-white mb-2">Negative Prompt</label>
+                                <textarea id="negative-prompt" class="w-full p-2 rounded" rows="2" placeholder="Enter negative prompt..."></textarea>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-white mb-2">Model</label>
+                                    <select id="model" class="w-full p-2 rounded" title="Select model" aria-label="Select model">
+                                        <option value="sd-v1-5">Stable Diffusion 1.5</option>
+                                        <option value="sd-v2-1">Stable Diffusion 2.1</option>
+                                        <option value="sdxl">Stable Diffusion XL</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-white mb-2">Scheduler</label>
+                                    <select id="scheduler" class="w-full p-2 rounded" title="Select scheduler" aria-label="Select scheduler">
+                                        <option value="default">Default</option>
+                                        <option value="ddim">DDIM</option>
+                                        <option value="dpm++">DPM++</option>
+                                        <option value="euler">Euler</option>
+                                        <option value="euler_a">Euler Ancestral</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-white mb-2">Steps</label>
+                                    <input type="number" id="steps" class="w-full p-2 rounded" value="50" min="1" max="100" title="Number of steps" aria-label="Number of steps" placeholder="Enter number of steps">
+                                </div>
+                                <div>
+                                    <label class="block text-white mb-2">Guidance Scale</label>
+                                    <input type="number" id="guidance" class="w-full p-2 rounded" value="7.5" min="1" max="20" step="0.1" title="Guidance scale" aria-label="Guidance scale" placeholder="Enter guidance scale">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-white mb-2">Width</label>
+                                    <input type="number" id="width" class="w-full p-2 rounded" value="512" min="256" max="1024" step="64" title="Image width" aria-label="Image width" placeholder="Enter image width">
+                                </div>
+                                <div>
+                                    <label class="block text-white mb-2">Height</label>
+                                    <input type="number" id="height" class="w-full p-2 rounded" value="512" min="256" max="1024" step="64" title="Image height" aria-label="Image height" placeholder="Enter image height">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-white mb-2">Number of Images</label>
+                                    <input type="number" id="num-images" class="w-full p-2 rounded" value="1" min="1" max="4" title="Number of images" aria-label="Number of images" placeholder="Enter number of images">
+                                </div>
+                                <div>
+                                    <label class="block text-white mb-2">Seed (-1 for random)</label>
+                                    <input type="number" id="seed" class="w-full p-2 rounded" value="-1" title="Seed value" aria-label="Seed value" placeholder="Enter seed value">
+                                </div>
+                            </div>
+                            <button onclick="generateImage()" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+                                Generate
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-4">Generated Images</h2>
+                        <div id="generated-images" class="grid grid-cols-2 gap-4">
+                            <!-- Generated images will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image to Image Tab -->
+        <div id="img2img" class="tab-content hidden">
+            <div class="glass-effect rounded-lg p-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-4">Transform Image</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-white mb-2">Upload Image</label>
+                                <input type="file" id="image-upload" class="w-full p-2 rounded" accept="image/*" title="Upload image" aria-label="Upload image" placeholder="Choose an image file">
+                            </div>
+                            <div>
+                                <label class="block text-white mb-2">Prompt</label>
+                                <textarea id="img2img-prompt" class="w-full p-2 rounded" rows="3" placeholder="Enter your prompt..."></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-white mb-2">Negative Prompt</label>
+                                <textarea id="img2img-negative-prompt" class="w-full p-2 rounded" rows="2" placeholder="Enter negative prompt..."></textarea>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-white mb-2">Strength</label>
+                                    <input type="number" id="strength" class="w-full p-2 rounded" value="0.75" min="0" max="1" step="0.01" title="Transformation strength" aria-label="Transformation strength" placeholder="Enter transformation strength">
+                                </div>
+                                <div>
+                                    <label class="block text-white mb-2">Model</label>
+                                    <select id="img2img-model" class="w-full p-2 rounded" title="Select model" aria-label="Select model">
+                                        <option value="sd-v1-5">Stable Diffusion 1.5</option>
+                                        <option value="sd-v2-1">Stable Diffusion 2.1</option>
+                                        <option value="sdxl">Stable Diffusion XL</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-white mb-2">Steps</label>
+                                    <input type="number" id="img2img-steps" class="w-full p-2 rounded" value="50" min="1" max="100" title="Number of steps" aria-label="Number of steps" placeholder="Enter number of steps">
+                                </div>
+                                <div>
+                                    <label class="block text-white mb-2">Guidance Scale</label>
+                                    <input type="number" id="img2img-guidance" class="w-full p-2 rounded" value="7.5" min="1" max="20" step="0.1" title="Guidance scale" aria-label="Guidance scale" placeholder="Enter guidance scale">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-white mb-2">Number of Images</label>
+                                    <input type="number" id="img2img-num-images" class="w-full p-2 rounded" value="1" min="1" max="4" title="Number of images" aria-label="Number of images" placeholder="Enter number of images">
+                                </div>
+                                <div>
+                                    <label class="block text-white mb-2">Seed (-1 for random)</label>
+                                    <input type="number" id="img2img-seed" class="w-full p-2 rounded" value="-1" title="Seed value" aria-label="Seed value" placeholder="Enter seed value">
+                                </div>
+                            </div>
+                            <button onclick="generateImage2Image()" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+                                Transform Image
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-4">Generated Images</h2>
+                        <div id="img2img-generated-images" class="grid grid-cols-2 gap-4">
+                            <!-- Generated images will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            document.getElementById(tabName).classList.remove('hidden');
+        }
+
+        async function generateImage() {
+            const data = {
+                prompt: document.getElementById('prompt').value,
+                negative_prompt: document.getElementById('negative-prompt').value,
+                model: document.getElementById('model').value,
+                scheduler: document.getElementById('scheduler').value,
+                steps: parseInt(document.getElementById('steps').value),
+                guidance: parseFloat(document.getElementById('guidance').value),
+                width: parseInt(document.getElementById('width').value),
+                height: parseInt(document.getElementById('height').value),
+                num_images: parseInt(document.getElementById('num-images').value),
+                seed: parseInt(document.getElementById('seed').value)
+            };
+
+            try {
+                const response = await fetch('/text2img', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    const container = document.getElementById('generated-images');
+                    container.innerHTML = '';
+                    result.images.forEach(imagePath => {
+                        const img = document.createElement('img');
+                        img.src = imagePath;
+                        img.className = 'w-full rounded shadow-lg';
+                        container.appendChild(img);
+                    });
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function generateImage2Image() {
+            const formData = new FormData();
+            const imageFile = document.getElementById('image-upload').files[0];
+            if (!imageFile) {
+                alert('Please select an image first');
+                return;
+            }
+
+            formData.append('image', imageFile);
+            formData.append('prompt', document.getElementById('img2img-prompt').value);
+            formData.append('negative_prompt', document.getElementById('img2img-negative-prompt').value);
+            formData.append('strength', document.getElementById('strength').value);
+            formData.append('model', document.getElementById('img2img-model').value);
+            formData.append('steps', document.getElementById('img2img-steps').value);
+            formData.append('guidance', document.getElementById('img2img-guidance').value);
+            formData.append('num_images', document.getElementById('img2img-num-images').value);
+            formData.append('seed', document.getElementById('img2img-seed').value);
+
+            try {
+                const response = await fetch('/img2img', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    const container = document.getElementById('img2img-generated-images');
+                    container.innerHTML = '';
+                    result.images.forEach(imagePath => {
+                        const img = document.createElement('img');
+                        img.src = imagePath;
+                        img.className = 'w-full rounded shadow-lg';
+                        container.appendChild(img);
+                    });
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html> 

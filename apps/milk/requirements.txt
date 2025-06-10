@@ -1,0 +1,12 @@
+# Web Framework
+flask==2.3.3
+gradio==4.0.0
+
+# Stable Diffusion
+diffusers==0.26.3
+transformers==4.37.2
+accelerate==0.27.2
+safetensors==0.5.3
+
+# Dependencies from root requirements.txt
+-r ../../requirements.txt 

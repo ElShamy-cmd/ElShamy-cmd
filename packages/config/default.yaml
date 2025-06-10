@@ -1,0 +1,20 @@
+# Default configuration for all projects
+
+# Server configuration
+server:
+  host: "0.0.0.0"
+  port: 5000
+  debug: false
+
+# Stable Diffusion configuration
+stable_diffusion:
+  model_id: "runwayml/stable-diffusion-v1-5"
+  device: "cuda"  # or "cpu"
+  num_inference_steps: 50
+  guidance_scale: 7.5
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "app.log" 

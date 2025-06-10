@@ -1,0 +1,10 @@
+# Shared dependencies
+python-dotenv==1.0.1
+markupsafe==3.0.2
+pillow==11.2.1
+numpy==2.3.0
+
+# Development dependencies
+pytest==7.4.3
+black==23.12.1
+flake8==7.0.0 
